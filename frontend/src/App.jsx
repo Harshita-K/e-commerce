@@ -1,16 +1,27 @@
-
 import React from 'react'
-import { Routes,Route } from 'react-router-dom'
-import Profile from './pages/profile.jsx'
+import { Routes, Route } from 'react-router-dom'
 import Login from './pages/login.jsx'
+import Signin from './pages/signin.jsx'
 import Navbar from './components/navbar.jsx'
+import ProtectedRoute from './components/ProtectedRoute.jsx'
+import Dashboard from './pages/Dashboard.jsx'
 
 const App = () => {
   return (
     <div>
-      <Navbar/>
       <Routes>
-        <Route  path='/login' element={<Login/>} />
+        {/* Public routes */}
+        <Route path='/login' element={<Login/>} />
+        <Route path='/signin' element={<Signin/>} />
+        
+        {/* Protected routes */}
+        <Route path='/dashboard' element={
+          <ProtectedRoute>
+            <Navbar>
+              <Dashboard />
+            </Navbar>
+          </ProtectedRoute>
+        } />
       </Routes>
     </div>
   )

@@ -38,6 +38,11 @@ const registerUser = async (req, res) => {
     try {
         const { name, email, password , phoneNumber } = req.body;
 
+        // Check if all fields are provided
+        if (!name || !email || !password || !phoneNumber) {
+            return res.json({ success: false, message: "All fields are required" });
+        }
+
         // checking already exists
         const exists = await userModel.findOne({ email});
         if (exists) {
@@ -62,6 +67,7 @@ const registerUser = async (req, res) => {
         const newUser = new userModel({
             name,
             email,
+            phoneNumber,
             password: hashedPassword,
         });
         const user = await newUser.save();

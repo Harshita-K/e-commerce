@@ -2,19 +2,22 @@ import express from 'express'
 import cors from 'cors'
 import 'dotenv/config'
 import { connect } from 'mongoose'
+import morgan from "morgan";
 import connectDB from './config/mongodb.js'
-import connectCloudinary from './config/coudinary.js'
+import connectCloudinary from './config/cloudinary.js'
 import userRouter from './routes/userroute.js'
 
 //app config
 const app = express()
-const PORT = process.env.PORT || 4000
+// const cors = require('cors')
+const PORT = process.env.PORT || 8080
 connectDB()
 connectCloudinary()
 
-//middleware
-app.use(cors())
+// Middleware
+app.use(cors()); // Allow requests from your frontend
 app.use(express.json())
+app.use(morgan('dev'));
 
 //api edpoints
 app.use('/api/users', userRouter)

@@ -8,5 +8,5 @@ const userSchema = new mongoose.Schema({
     cartdata: { type: Array, default: {} }
 },{minimize: false})
 
-const userModel = mongoose.model.user || mongoose.model('user', userSchema);
+const userModel = mongoose.model('user', userSchema) || mongoose.model.user;
 export default userModel;

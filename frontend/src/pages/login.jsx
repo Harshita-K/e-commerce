@@ -1,12 +1,15 @@
 import React, { useState } from 'react'
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import '../styles/login.css';
+import { Link } from 'react-router-dom'; // Add this import
 
 const Login = () => {
   const [formData, setFormData] = useState({
     email: '',
     password: ''
   })
-  
+  const navigate = useNavigate();
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -21,7 +24,7 @@ const Login = () => {
       console.log('Logging in with:', formData)
       
       // API call using axios
-      const response = await axios.post('http://localhost:5000/api/users/login', formData);
+      const response = await axios.post('http://localhost:8080/api/users/login', formData);
       
       // Handle successful login
       console.log('Login successful:', response.data);
@@ -30,11 +33,11 @@ const Login = () => {
       if (response.data.token) {
         localStorage.setItem('token', response.data.token);
         localStorage.setItem('user', JSON.stringify(response.data.user));
-        window.location.href = '/profile'; // Redirect to home page after login
+        // window.location.href = '/dashboard'; // Redirect to home page after login
         
         // Redirect to homepage or dashboard
         // Example if using react-router:
-        // navigate('/dashboard');
+        navigate('/dashboard');
         
         alert('Login successful!');
       }
@@ -86,6 +89,9 @@ const Login = () => {
           <button type="submit" className="login-button">
             Login
           </button>
+          <div className="register-option">
+            <p>Don't have an account? <Link to="/signin">Sign Up</Link></p>
+          </div>
         </form>
       </div>
     </div>
