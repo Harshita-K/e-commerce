@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import '../styles/login.css';
-import { Link } from 'react-router-dom'; // Add this import
+import { Link , NavLink} from 'react-router-dom'; // Add this import
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -37,9 +37,13 @@ const Login = () => {
         
         // Redirect to homepage or dashboard
         // Example if using react-router:
-        navigate('/dashboard');
+        navigate('/profile');
         
         alert('Login successful!');
+      }
+      else {
+        console.error('Login failed:', response.data.message);
+        alert(response.data.message);
       }
     } catch (error) {
       console.error('Login failed:', error);

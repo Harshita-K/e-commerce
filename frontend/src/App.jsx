@@ -5,6 +5,7 @@ import Signin from './pages/signin.jsx'
 import Navbar from './components/navbar.jsx'
 import ProtectedRoute from './components/ProtectedRoute.jsx'
 import Dashboard from './pages/Dashboard.jsx'
+import Profile from './pages/profile.jsx'
 
 const App = () => {
   return (
@@ -15,10 +16,10 @@ const App = () => {
         <Route path='/signin' element={<Signin/>} />
         
         {/* Protected routes */}
-        <Route path='/dashboard' element={
+        <Route path='/profile' element={
           <ProtectedRoute>
             <Navbar>
-              <Dashboard />
+              <Profile />
             </Navbar>
           </ProtectedRoute>
         } />

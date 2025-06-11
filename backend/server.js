@@ -6,6 +6,7 @@ import morgan from "morgan";
 import connectDB from './config/mongodb.js'
 import connectCloudinary from './config/cloudinary.js'
 import userRouter from './routes/userroute.js'
+import productRouter from './routes/productroute.js';
 
 //app config
 const app = express()
@@ -21,6 +22,7 @@ app.use(morgan('dev'));
 
 //api edpoints
 app.use('/api/users', userRouter)
+app.use('/api/products', productRouter)
 
 app.get('/', (req, res) => {
     res.send("API working")
