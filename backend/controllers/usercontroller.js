@@ -83,23 +83,4 @@ const registerUser = async (req, res) => {
 
 }
 
-const getUserDetails = async (req, res) => {
-    try {
-        const userId = req.user.ID; // This comes from the middleware
-        console.log("User ID from token:", userId); // Debug log
-        
-        const user = await userModel.findById(userId).select('-password'); // Exclude password
-        
-        if (!user) {
-            return res.json({ success: false, message: "User not found" });
-        }
-        
-        res.json({ success: true, user });
-    }
-    catch (error) {
-        console.log("Get user details error:", error);
-        res.json({ success: false, message: error.message });
-    }
-}
-
-export { loginUser, registerUser, getUserDetails };
+export { loginUser, registerUser };

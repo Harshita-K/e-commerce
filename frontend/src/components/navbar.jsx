@@ -1,8 +1,15 @@
 import React from 'react'
-import { NavLink } from 'react-router-dom'
+import { NavLink, useNavigate } from 'react-router-dom'
 import './navbar.css'
 
 const Navbar = ({ children }) => {
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    navigate('/login');
+  };
+
   return (
     <>
       <nav className="navbar">
@@ -25,6 +32,7 @@ const Navbar = ({ children }) => {
             <NavLink to="/Dashboard" className={({ isActive }) => isActive ? "navbar-link active" : "navbar-link"}>
               Dashboard
             </NavLink>
+            <button className="navbar-link logout-btn" onClick={handleLogout} style={{marginLeft: '1rem'}}>Logout</button>
           </div>
         </div>
       </nav>

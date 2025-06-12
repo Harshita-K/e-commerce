@@ -1,109 +1,266 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import '../styles/profile.css';
-import { Link , NavLink} from 'react-router-dom';
 
 const Profile = () => {
-  console.log("Profile component loaded");
-  const [user, setUser] = useState(null);
+  const [userData, setUserData] = useState({
+    name: '',
+    email: '',
+    phoneNumber: ''
+  });
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
+  const [isEditing, setIsEditing] = useState(false);
+  const [showPasswordForm, setShowPasswordForm] = useState(false);
+  const [passwords, setPasswords] = useState({ oldPassword: '', newPassword: '', confirmNewPassword: '' });
   const navigate = useNavigate();
 
+  // Fetch user data on component mount
   useEffect(() => {
-    const fetchUserDetails = async () => {
-      try {
-        // Get token from localStorage
-        const token = localStorage.getItem('token');
-        console.log("Token exists:", !!token);
-        
-        if (!token) {
-          // Redirect to login if no token exists
-          navigate('/login');
-          return;
-        }
-
-        // Make request to backend with token in headers
-        console.log("Making API request to profile endpoint...");
-        const response = await axios.get('http://localhost:8080/api/users/profile', {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        });
-        
-        console.log("API Response:", response.data);
-
-        if (response.data && response.data.success) {
-          console.log("User data:", response.data.user);
-          setUser(response.data.user);
-        } else {
-          console.error("API error:", response.data);
-          setError(response.data?.message || 'Failed to fetch user details');
-        }
-      } catch (err) {
-        console.error("API call exception:", err);
-        setError(err.message || 'Something went wrong');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchUserDetails();
+    fetchUserProfile();
   }, []);
 
-  const handleLogout = () => {
-    localStorage.removeItem('token');
-    navigate('/login');
+  // Function to fetch user profile data
+  const fetchUserProfile = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        navigate('/login');
+        return;
+      }
+
+      const response = await axios.get('http://localhost:8080/api/users/profile', {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      console.log('Backend response:', response.data);
+
+      if (response.data.success) {
+        setUserData({
+          name: response.data.user.name || '',
+          email: response.data.user.email || '',
+          phoneNumber: response.data.user.phoneNumber || ''
+        });
+      } else {
+        setError("Failed to find user data: " + (response.data.message || 'No details available'));
+      }
+    } catch (err) {
+      console.error('Error fetching user data:', err);
+      setError('Error loading profile data');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Function to handle input changes
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setUserData(prevState => ({
+      ...prevState,
+      [name]: value
+    }));
+  };
+
+  // Function to toggle edit mode
+  const toggleEditMode = () => {
+    setIsEditing(!isEditing);
+    // Reset success and error messages when toggling edit mode
+    setSuccess('');
+    setError('');
+  };
+
+  // Function to cancel editing and revert changes
+  const handleCancelEdit = () => {
+    fetchUserProfile(); // Refetch original data
+    setIsEditing(false);
+    setError('');
+    setSuccess('');
+  };
+
+  // Function to save profile changes
+  const handleSaveChanges = async () => {
+    try {
+      setError('');
+      setSuccess('');
+      
+      const token = localStorage.getItem('token');
+      if (!token) {
+        navigate('/login');
+        return;
+      }
+
+      // Call the updateUserDetails function in the backend
+      const response = await axios.put('http://localhost:8080/api/users/profile', userData, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+
+      if (response.data.success) {
+        setSuccess('Profile updated successfully!');
+        setIsEditing(false);
+        // Update the local state with the returned user data
+        setUserData({
+          name: response.data.user.name || '',
+          email: response.data.user.email || '',
+          phoneNumber: response.data.user.phoneNumber || ''
+        });
+      } else {
+        setError(response.data.message || 'Failed to update profile');
+      }
+    } catch (err) {
+      console.error('Error updating profile:', err);
+      setError(err.response?.data?.message || 'An error occurred while updating profile');
+    }
+  };
+
+  const handlePasswordInputChange = (e) => {
+    const { name, value } = e.target;
+    setPasswords(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleChangePassword = async () => {
+    setError('');
+    setSuccess('');
+    if (!passwords.oldPassword || !passwords.newPassword || !passwords.confirmNewPassword) {
+      setError('Please fill all password fields.');
+      return;
+    }
+    if (passwords.newPassword !== passwords.confirmNewPassword) {
+      setError('New passwords do not match.');
+      return;
+    }
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        navigate('/login');
+        return;
+      }
+      const response = await axios.post('http://localhost:8080/api/users/profile/changepass', {
+        oldPassword: passwords.oldPassword,
+        newPassword: passwords.newPassword
+      }, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      if (response.data.success) {
+        setSuccess('Password changed successfully!');
+        setShowPasswordForm(false);
+        setPasswords({ oldPassword: '', newPassword: '', confirmNewPassword: '' });
+      } else {
+        setError(response.data.message || 'Failed to change password');
+      }
+    } catch (err) {
+      setError(err.response?.data?.message || 'An error occurred while changing password');
+    }
   };
 
   if (loading) {
-    return (
-      <div className="profile-container loading">
-        <div className="spinner"></div>
-        <p>Loading profile...</p>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="profile-container error">
-        <h2>Error</h2>
-        <p>{error}</p>
-        <button onClick={() => navigate('/login')}>Back to Login</button>
-      </div>
-    );
+    return <div className="loading-container">Loading profile data...</div>;
   }
 
   return (
     <div className="profile-container">
-      <div className="profile-header">
-        <h1>My Profile</h1>
-        <button className="logout-btn" onClick={handleLogout}>Logout</button>
-      </div>
+      <h2>My Profile</h2>
+      
+      {error && <div className="error-message">{error}</div>}
+      {success && <div className="success-message">{success}</div>}
       
       <div className="profile-card">
-        
-        <div className="profile-details">
-          <div className="detail-item">
-            <span className="detail-label">Name:</span>
-            <span className="detail-value">{user.name}</span>
+        <div className="profile-header">
+          <div className="avatar-placeholder">
+            {userData.name ? userData.name.charAt(0).toUpperCase() : '?'}
           </div>
-          <div className="detail-item">
-            <span className="detail-label">Email:</span>
-            <span className="detail-value">{user.email}</span>
-          </div>
-          <div className="detail-item">
-            <span className="detail-label">Phone:</span>
-            <span className="detail-value">{user.phoneNumber}</span>
-          </div>
+          <h3>{userData.name || 'User'}</h3>
         </div>
-      </div>
-      
-      <div className="profile-actions">
-        <Link to="/edit-profile" className="edit-profile-btn">Edit Profile</Link>
-        <Link to="/my-listings" className="my-listings-btn">My Listings</Link>
+
+        <div className="profile-details">
+          {isEditing ? (
+            // Editable fields
+            <>
+              <div className="profile-field">
+                <label>Name</label>
+                <input 
+                  type="text" 
+                  name="name" 
+                  value={userData.name} 
+                  onChange={handleInputChange} 
+                />
+              </div>
+              
+              <div className="profile-field">
+                <label>Email</label>
+                <input 
+                  type="email" 
+                  name="email" 
+                  value={userData.email} 
+                  onChange={handleInputChange} 
+                />
+              </div>
+              
+              <div className="profile-field">
+                <label>Phone Number</label>
+                <input 
+                  type="tel" 
+                  name="phoneNumber" 
+                  value={userData.phoneNumber} 
+                  onChange={handleInputChange} 
+                />
+              </div>
+              
+              <div className="profile-actions">
+                <button className="save-button" onClick={handleSaveChanges}>Save Changes</button>
+                <button className="cancel-button" onClick={handleCancelEdit}>Cancel</button>
+              </div>
+            </>
+          ) : (
+            // Read-only profile display
+            <>
+              <div className="profile-field">
+                <label>Name</label>
+                <p>{userData.name}</p>
+              </div>
+              
+              <div className="profile-field">
+                <label>Email</label>
+                <p>{userData.email}</p>
+              </div>
+              
+              <div className="profile-field">
+                <label>Phone Number</label>
+                <p>{userData.phoneNumber || 'Not provided'}</p>
+              </div>
+              
+              <div className="profile-actions">
+                <button className="edit-button" onClick={toggleEditMode}>Edit Profile</button>
+                <button className="change-password-button" onClick={() => setShowPasswordForm(!showPasswordForm)} style={{marginLeft: '1rem'}}>Change Password</button>
+              </div>
+            </>
+          )}
+        </div>
+
+        {showPasswordForm && (
+          <div className="change-password-form">
+            <div className="profile-field">
+              <label>Old Password</label>
+              <input type="password" name="oldPassword" value={passwords.oldPassword} onChange={handlePasswordInputChange} />
+            </div>
+            <div className="profile-field">
+              <label>New Password</label>
+              <input type="password" name="newPassword" value={passwords.newPassword} onChange={handlePasswordInputChange} />
+            </div>
+            <div className="profile-field">
+              <label>Confirm New Password</label>
+              <input type="password" name="confirmNewPassword" value={passwords.confirmNewPassword} onChange={handlePasswordInputChange} />
+            </div>
+            <div className="profile-actions">
+              <button className="save-button" onClick={handleChangePassword}>Save Password</button>
+              <button className="cancel-button" onClick={() => setShowPasswordForm(false)}>Cancel</button>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
