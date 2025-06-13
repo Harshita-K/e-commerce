@@ -25,12 +25,20 @@ const Navbar = ({ children }) => {
               Shop
             </NavLink>
 
+            <NavLink to="/sell" className={({ isActive }) => isActive ? "navbar-link active" : "navbar-link"}>
+              Sell
+            </NavLink>
+
             <NavLink to="/cart" className={({ isActive }) => isActive ? "navbar-link active" : "navbar-link"}>
               Cart
             </NavLink>
 
             <NavLink to="/Dashboard" className={({ isActive }) => isActive ? "navbar-link active" : "navbar-link"}>
               Dashboard
+            </NavLink>
+
+            <NavLink to="/myproduct" className={({ isActive }) => isActive ? "navbar-link active" : "navbar-link"}>
+              myProducts
             </NavLink>
             <button className="navbar-link logout-btn" onClick={handleLogout} style={{marginLeft: '1rem'}}>Logout</button>
           </div>
