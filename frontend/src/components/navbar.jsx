@@ -33,10 +33,6 @@ const Navbar = ({ children }) => {
               Cart
             </NavLink>
 
-            <NavLink to="/Dashboard" className={({ isActive }) => isActive ? "navbar-link active" : "navbar-link"}>
-              Dashboard
-            </NavLink>
-
             <NavLink to="/myproduct" className={({ isActive }) => isActive ? "navbar-link active" : "navbar-link"}>
               myProducts
             </NavLink>

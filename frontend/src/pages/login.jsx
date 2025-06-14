@@ -33,9 +33,9 @@ const Login = () => {
       if (response.data.token) {
         localStorage.setItem('token', response.data.token);
         localStorage.setItem('user', JSON.stringify(response.data.user));
-        // window.location.href = '/dashboard'; // Redirect to home page after login
+        // window.location.href = '/shop'; // Redirect to home page after login
         
-        // Redirect to homepage or dashboard
+        // Redirect to homepage or shop
         // Example if using react-router:
         navigate('/profile');
         

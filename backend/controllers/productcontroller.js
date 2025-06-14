@@ -113,4 +113,25 @@ const editProduct = async (req, res) => {
     }
 }
 
-export { createProduct, getAllProducts, getUserProducts, editProduct }
+const getProductById = async (req, res) => {
+    try {
+        const productId = req.params.id;
+        
+        if (!productId) {
+            return res.json({ success: false, message: "Product ID is required" });
+        }
+        
+        const product = await productModel.findById(productId);
+        
+        if (!product) {
+            return res.json({ success: false, message: "Product not found" });
+        }
+        
+        res.json({ success: true, product });
+    } catch (error) {
+        console.error("Get product by ID error:", error);
+        res.json({ success: false, message: error.message });
+    }
+}
+
+export { createProduct, getAllProducts, getUserProducts, editProduct, getProductById }

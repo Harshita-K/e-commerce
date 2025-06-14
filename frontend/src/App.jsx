@@ -4,10 +4,11 @@ import Login from './pages/login.jsx'
 import Signin from './pages/signin.jsx'
 import Navbar from './components/navbar.jsx'
 import ProtectedRoute from './components/ProtectedRoute.jsx'
-import Dashboard from './pages/Dashboard.jsx'
+import Shop from './pages/shop.jsx'
 import Profile from './pages/profile.jsx'
 import SellItem from './pages/SellItem.jsx'
 import MyProduct from './pages/myrpoduct.jsx'
+import Cart from './pages/cart.jsx'
 
 const App = () => {
   return (
@@ -39,10 +40,17 @@ const App = () => {
             </Navbar>
           </ProtectedRoute>
         } />
-        <Route path='/dashboard' element={
+        <Route path='/shop' element={
           <ProtectedRoute>
             <Navbar>
-              <Dashboard />
+              <Shop />
+            </Navbar>
+          </ProtectedRoute>
+        } />
+        <Route path='/cart' element={
+          <ProtectedRoute>
+            <Navbar>
+              <Cart />
             </Navbar>
           </ProtectedRoute>
         } />
