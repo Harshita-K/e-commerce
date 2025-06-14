@@ -36,6 +36,19 @@ const Navbar = ({ children }) => {
             <NavLink to="/myproduct" className={({ isActive }) => isActive ? "navbar-link active" : "navbar-link"}>
               myProducts
             </NavLink>
+
+            <NavLink to="/myorders" className={({ isActive }) => isActive ? "navbar-link active" : "navbar-link"}>
+              myOrders
+            </NavLink>
+
+            <NavLink to="/deliveries" className={({ isActive }) => isActive ? "navbar-link active" : "navbar-link"}>
+              myDeliveries
+            </NavLink>
+
+            <NavLink to="/profile" className={({ isActive }) => isActive ? "navbar-link active" : "navbar-link"}>
+              profile
+            </NavLink>
+
             <button className="navbar-link logout-btn" onClick={handleLogout} style={{marginLeft: '1rem'}}>Logout</button>
           </div>
         </div>

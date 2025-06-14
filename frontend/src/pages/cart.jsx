@@ -59,6 +59,63 @@ const Cart = () => {
     fetchCart();
   }, []);
 
+  const removeFromCart = async (productId) => {
+    try {
+      setError('');
+      setLoading(true);
+      const token = localStorage.getItem('token');
+      if (!token) {
+        setError('Please login to modify your cart');
+        setLoading(false);
+        return;
+      }
+      const response = await axios.post('http://localhost:8080/api/products/removefromcart', { productId }, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      if (response.data.success) {
+        setCartItems(prev => prev.filter(item => item.productId !== productId));
+      } else {
+        setError(response.data.message || 'Failed to remove item from cart');
+      }
+    } catch (err) {
+      setError(err.response?.data?.message || 'An error occurred while removing item');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const buyNow = async () => {
+    try {
+      setError('');
+      setLoading(true);
+      const token = localStorage.getItem('token');
+      if (!token) {
+        setError('Please login to buy products');
+        setLoading(false);
+        return;
+      }
+      const productIds = cartItems.filter(item => item.product).map(item => item.productId);
+      if (productIds.length === 0) {
+        setError('No valid products in cart to buy');
+        setLoading(false);
+        return;
+      }
+      const response = await axios.post('http://localhost:8080/api/orders/buynow', { productIds }, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      if (response.data.success) {
+        setCartItems([]);
+        alert('Order placed successfully for all items!');
+      } else {
+        setError(response.data.message || 'Failed to place order');
+      }
+    } catch (err) {
+      setError(err.response?.data?.message || 'An error occurred while placing order');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="cart-container">
       <h2>My Cart</h2>
@@ -86,6 +143,7 @@ const Cart = () => {
                   <p className="item-price">₹{item.product.price}</p>
                   <p className="item-quantity">Quantity: {item.quantity}</p>
                   <p className="item-total">Total: ₹{item.product.price * item.quantity}</p>
+                  <button className="remove-btn" onClick={() => removeFromCart(item.productId)}>Remove</button>
                 </div>
               </div>
             ))}
@@ -93,6 +151,9 @@ const Cart = () => {
           <div className="cart-total">
             <h3>Total Items: {cartItems.filter(item => item.product).length}</h3>
             <h3>Total Amount: ₹{cartItems.filter(item => item.product).reduce((total, item) => total + (item.product.price * item.quantity), 0)}</h3>
+            <button className="buy-btn" onClick={buyNow} disabled={cartItems.filter(item => item.product).length === 0 || loading}>
+              Buy Now
+            </button>
           </div>
         </>
       )}

@@ -1,4 +1,4 @@
-import productModel from "../models/prodectmodel.js";
+import productModel from "../models/productmodel.js";
 import jwt from "jsonwebtoken";
 
 const createProduct = async (req, res) => {

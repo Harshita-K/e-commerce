@@ -9,6 +9,8 @@ import Profile from './pages/profile.jsx'
 import SellItem from './pages/SellItem.jsx'
 import MyProduct from './pages/myrpoduct.jsx'
 import Cart from './pages/cart.jsx'
+import Orders from './pages/orders.jsx'
+import Delivery from './pages/delivery.jsx'
 
 const App = () => {
   return (
@@ -51,6 +53,20 @@ const App = () => {
           <ProtectedRoute>
             <Navbar>
               <Cart />
+            </Navbar>
+          </ProtectedRoute>
+        } />
+        <Route path='/myorders' element={
+          <ProtectedRoute>
+            <Navbar>
+              <Orders />
+            </Navbar>
+          </ProtectedRoute>
+        } />
+        <Route path='/deliveries' element={
+          <ProtectedRoute>
+            <Navbar>
+              <Delivery />
             </Navbar>
           </ProtectedRoute>
         } />

@@ -1,0 +1,72 @@
+.orders-container {
+  max-width: 900px;
+  margin: 2rem auto;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+  padding: 2rem 2.5rem 2.5rem 2.5rem;
+}
+
+.orders-container h2 {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  color: #333;
+  font-size: 2rem;
+}
+
+.loading {
+  text-align: center;
+  color: #888;
+  margin: 2rem 0;
+  font-size: 1.1rem;
+}
+
+.error-message {
+  color: #fff;
+  background: #ff5858;
+  padding: 0.8rem 1rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.empty-message {
+  color: #888;
+  text-align: center;
+  margin: 3rem 0;
+  font-size: 1.2rem;
+}
+
+.orders-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.order-card {
+  background: #fafbfc;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  padding: 1.5rem 1.2rem;
+  display: flex;
+  flex-direction: column;
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+
+.order-card:hover {
+  box-shadow: 0 6px 24px rgba(255, 88, 88, 0.13);
+  transform: translateY(-3px) scale(1.02);
+}
+
+.order-info {
+  font-size: 1.05rem;
+  color: #333;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.order-info strong {
+  color: #f09819;
+}

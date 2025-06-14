@@ -9,5 +9,5 @@ const productSchema = new mongoose.Schema({
     owner: { type: String, required: true }
 })
 
-const productModel = mongoose.model.product || mongoose.model('product', productSchema)
+const productModel = mongoose.model.product || mongoose.model('Product', productSchema)
 export default productModel;
