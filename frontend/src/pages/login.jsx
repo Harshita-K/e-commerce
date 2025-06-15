@@ -37,7 +37,7 @@ const Login = () => {
         
         // Redirect to homepage or shop
         // Example if using react-router:
-        navigate('/profile');
+        navigate('/');
         
         alert('Login successful!');
       }

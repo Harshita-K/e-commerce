@@ -45,7 +45,7 @@ const Navbar = ({ children }) => {
               myDeliveries
             </NavLink>
 
-            <NavLink to="/profile" className={({ isActive }) => isActive ? "navbar-link active" : "navbar-link"}>
+            <NavLink to="/" className={({ isActive }) => isActive ? "navbar-link active" : "navbar-link"}>
               profile
             </NavLink>
 
