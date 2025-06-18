@@ -54,6 +54,9 @@ const Orders = () => {
               <div><strong>Price:</strong> ₹{order.price}</div>
               <div><strong>Seller:</strong> {order.seller?.name || order.seller}</div>
               <div><strong>Placed On:</strong> {new Date(order.createdAt).toLocaleString()}</div>
+              {order.otp && (
+                <div><strong>OTP:</strong> {order.otp}</div>
+              )}
             </div>
           </div>
         ))}

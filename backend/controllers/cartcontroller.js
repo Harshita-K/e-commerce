@@ -1,4 +1,5 @@
 import userModel from "../models/usermodel.js";
+import productModel from "../models/productmodel.js";
 import jwt from "jsonwebtoken";
 
 const addToCart = async (req, res) => {
@@ -74,7 +75,6 @@ const showCart = async (req, res) => {
         if (!token) {
             return res.json({ success: false, message: "Authorization token required" });
         }
-        
         let userId;
         try {
             const decoded = jwt.verify(token, process.env.JWT_SECRET);
@@ -82,22 +82,31 @@ const showCart = async (req, res) => {
         } catch (err) {
             return res.json({ success: false, message: "Invalid token" });
         }
-        
         if (!userId) {
             return res.json({ success: false, message: "User ID not found in token" });
         }
-        
         // Find the user
         const user = await userModel.findById(userId).select('cartdata');
         if (!user) {
             return res.json({ success: false, message: "User not found" });
         }
-        
+        // Check if each product in cart exists and is available
+        let updatedCart = [];
+        for (const item of user.cartdata || []) {
+            const product = await productModel.findById(item.productId);
+            if (product && product.status === 'available') {
+                updatedCart.push(item);
+            }
+        }
+        // If cart was changed, update in DB
+        if (updatedCart.length !== (user.cartdata || []).length) {
+            user.cartdata = updatedCart;
+            await user.save();
+        }
         res.json({ 
             success: true, 
             cartdata: user.cartdata || [] 
         });
-        
     } catch (error) {
         console.error("Show cart error:", error);
         res.json({ success: false, message: error.message });

@@ -6,7 +6,8 @@ const productSchema = new mongoose.Schema({
     price: { type: Number, required: true },
     image: { type: Array },
     category: { type: String },
-    owner: { type: String, required: true }
+    owner: { type: String, required: true },
+    status: { type: String, enum: ['available', 'sold'], default: 'available' }
 })
 
 const productModel = mongoose.model.product || mongoose.model('Product', productSchema)

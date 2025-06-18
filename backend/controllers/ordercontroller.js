@@ -74,10 +74,19 @@ const myOrders = async (req, res) => {
             return res.json({ success: false, message: 'User ID not found in token' });
         }
         // Find all orders where the user is the buyer
-        const orders = await orderModel.find({ buyer: userId })
+        let orders = await orderModel.find({ buyer: userId })
             .populate('product')
             .populate('seller', 'name email');
-        res.json({ success: true, orders });
+        // Filter out orders where the product does not exist
+        const validOrders = [];
+        for (const order of orders) {
+            if (!order.product) {
+                await orderModel.findByIdAndDelete(order._id);
+            } else {
+                validOrders.push(order);
+            }
+        }
+        res.json({ success: true, orders: validOrders });
     } catch (error) {
         console.error('Fetch my orders error:', error);
         res.json({ success: false, message: error.message });
@@ -101,16 +110,76 @@ const myDelivery = async (req, res) => {
         if (!userId) {
             return res.json({ success: false, message: 'User ID not found in token' });
         }
-        // Find all orders where the user is the seller
-        const orders = await orderModel.find({ seller: userId })
+        // Find all orders where the user is the seller and status is pending
+        let orders = await orderModel.find({ seller: userId, status: 'pending' })
             .populate('product')
             .populate('buyer', 'name email');
-        res.json({ success: true, orders });
+        // Filter out orders where the product does not exist
+        const validOrders = [];
+        for (const order of orders) {
+            if (!order.product) {
+                await orderModel.findByIdAndDelete(order._id);
+            } else {
+                validOrders.push(order);
+            }
+        }
+        res.json({ success: true, orders: validOrders });
     } catch (error) {
         console.error('Fetch my deliveries error:', error);
         res.json({ success: false, message: error.message });
     }
 };
 
+const generateOrderOtp = async (req, res) => {
+    try {
+        const { orderId } = req.body;
+        if (!orderId) {
+            return res.json({ success: false, message: 'Order ID is required' });
+        }
+        // Generate a 6-digit OTP
+        const otp = Math.floor(100000 + Math.random() * 900000).toString();
+        // Update the order with the OTP
+        const order = await orderModel.findByIdAndUpdate(
+            orderId,
+            { otp },
+            { new: true }
+        );
+        if (!order) {
+            return res.json({ success: false, message: 'Order not found' });
+        }
+        res.json({ success: true, message: 'OTP generated successfully', otp, order });
+    } catch (error) {
+        console.error('Generate OTP error:', error);
+        res.json({ success: false, message: error.message });
+    }
+};
 
-export { buynow, myOrders, myDelivery };
+const verifyOrderOtp = async (req, res) => {
+    try {
+        const { orderId, otp } = req.body;
+        if (!orderId || !otp) {
+            return res.json({ success: false, message: 'Order ID and OTP are required' });
+        }
+        // Find the order
+        const order = await orderModel.findById(orderId);
+        if (!order) {
+            return res.json({ success: false, message: 'Order not found' });
+        }
+        if (order.otp !== otp) {
+            return res.json({ success: false, message: 'Invalid OTP' });
+        }
+        // Update order status to delivered (completed)
+        order.status = 'completed';
+        order.otp = undefined; // Optionally clear OTP after verification
+        await order.save();
+        // Also update the product status to delivered
+        await productModel.findByIdAndUpdate(order.product, { status: 'delivered' });
+        res.json({ success: true, message: 'Order delivered successfully', order });
+    } catch (error) {
+        console.error('Verify OTP error:', error);
+        res.json({ success: false, message: error.message });
+    }
+};
+
+
+export { buynow, myOrders, myDelivery, generateOrderOtp, verifyOrderOtp };

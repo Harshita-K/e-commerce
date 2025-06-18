@@ -80,6 +80,24 @@ const MyProduct = () => {
     setEditingProduct(null);
   };
 
+  const handleDeleteProduct = async (productId) => {
+    try {
+      setError('');
+      const token = localStorage.getItem('token');
+      if (!token) return setError('Not logged in');
+      const res = await axios.delete(`http://localhost:8080/api/products/${productId}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      if (res.data.success) {
+        setProducts(products.filter(p => p._id !== productId));
+      } else {
+        setError(res.data.message || 'Failed to delete product');
+      }
+    } catch (err) {
+      setError(err.response?.data?.message || 'An error occurred while deleting product');
+    }
+  };
+
   return (
     <div className="my-products-container">
       <h2>My Products</h2>
@@ -114,6 +132,7 @@ const MyProduct = () => {
                     <span className="product-category">{product.category}</span>
                   </div>
                   <button className="edit-btn" onClick={() => handleEditClick(product)}>Edit</button>
+                  <button className="delete-btn" onClick={() => handleDeleteProduct(product._id)}>Delete</button>
                 </div>
               </>
             )}

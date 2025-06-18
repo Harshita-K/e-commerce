@@ -56,7 +56,7 @@ const getAllProducts = async (req, res) => {
         
         // Find products that don't belong to the current user
         const products = userId 
-            ? await productModel.find({ owner: { $ne: userId } })
+            ? await productModel.find({ owner: { $ne: userId }, status: 'available' })
             : await productModel.find({});
             
         console.log(`Found ${products.length} products for userId: ${userId}`); // Debug log
@@ -86,7 +86,7 @@ const getUserProducts = async (req, res) => {
         if (!userId) {
             return res.json({ success: false, message: "User ID is required in token or query." });
         }
-        const products = await productModel.find({ owner: userId });
+        const products = await productModel.find({ owner: userId , status: 'available' });
         res.json({ success: true, products });
     } catch (error) {
         console.error(error);
@@ -134,4 +134,21 @@ const getProductById = async (req, res) => {
     }
 }
 
-export { createProduct, getAllProducts, getUserProducts, editProduct, getProductById }
+const deleteProduct = async (req, res) => {
+    try {
+        const productId = req.params.id;
+        if (!productId) {
+            return res.json({ success: false, message: "Product ID is required" });
+        }
+        const deletedProduct = await productModel.findByIdAndDelete(productId);
+        if (!deletedProduct) {
+            return res.json({ success: false, message: "Product not found or already deleted" });
+        }
+        res.json({ success: true, message: "Product deleted successfully", product: deletedProduct });
+    } catch (error) {
+        console.error("Delete product error:", error);
+        res.json({ success: false, message: error.message });
+    }
+}
+
+export { createProduct, getAllProducts, getUserProducts, editProduct, getProductById, deleteProduct }
