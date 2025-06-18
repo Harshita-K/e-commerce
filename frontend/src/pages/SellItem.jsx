@@ -3,6 +3,10 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import '../styles/sellItem.css'; // Assuming you have a CSS file for styling
 
+const CATEGORY_OPTIONS = [
+  'sports', 'electronics', 'clothing', 'books', 'furniture', 'toys', 'slave', 'other'
+];
+
 const SellItem = () => {
   const [form, setForm] = useState({
     name: '',
@@ -43,8 +47,9 @@ const SellItem = () => {
       const payload = {
         ...form,
         price: Number(form.price),
-        owner
-      };
+        owner,
+        category: form.category ? form.category.split(',') : []
+    };
       const res = await axios.post('http://localhost:8080/api/products/sell', payload, {
         headers: { Authorization: `Bearer ${token}` }
       });
@@ -83,7 +88,28 @@ const SellItem = () => {
         </div>
         <div>
           <label>Category</label>
-          <input type="text" name="category" value={form.category} onChange={handleChange} />
+          <div className="category-checkboxes">
+            {CATEGORY_OPTIONS.map(option => (
+              <label key={option} style={{ marginRight: '1rem' }}>
+                <input
+                  type="checkbox"
+                  name="category"
+                  value={option}
+                  checked={form.category.split(',').includes(option)}
+                  onChange={e => {
+                    let newCategories = form.category ? form.category.split(',') : [];
+                    if (e.target.checked) {
+                      newCategories.push(option);
+                    } else {
+                      newCategories = newCategories.filter(cat => cat !== option);
+                    }
+                    setForm(prev => ({ ...prev, category: newCategories.join(',') }));
+                  }}
+                />
+                {option}
+              </label>
+            ))}
+          </div>
         </div>
         <button type="submit">List Product</button>
       </form>

@@ -7,6 +7,7 @@ const Shop = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const [cartProductIds, setCartProductIds] = useState([]);
 
   useEffect(() => {
     const fetchAllProducts = async () => {
@@ -15,15 +16,18 @@ const Shop = () => {
       try {
         const token = localStorage.getItem('token');
         const headers = token ? { Authorization: `Bearer ${token}` } : {};
-        
-        const response = await axios.get('http://localhost:8080/api/products/shop', {
-          headers
-        });
-        
+        const response = await axios.get('http://localhost:8080/api/products/shop', { headers });
         if (response.data.success) {
           setProducts(response.data.products);
         } else {
           setError(response.data.message || 'Failed to fetch products');
+        }
+        // Fetch cart products if logged in
+        if (token) {
+          const cartRes = await axios.get('http://localhost:8080/api/products/cart', { headers });
+          if (cartRes.data.success) {
+            setCartProductIds((cartRes.data.cartdata || []).map(item => item.productId));
+          }
         }
       } catch (err) {
         setError(err.response?.data?.message || 'An error occurred');
@@ -52,6 +56,7 @@ const Shop = () => {
 
       if (response.data.success) {
         setSuccess('Product added to cart successfully!');
+        setCartProductIds(prev => [...prev, productId]);
         setTimeout(() => setSuccess(''), 3000);
       } else {
         setError(response.data.message || 'Failed to add to cart');
@@ -90,9 +95,13 @@ const Shop = () => {
                 <span className="product-price">₹{product.price}</span>
                 <span className="product-category">{product.category}</span>
               </div>
-              <button className="add-to-cart-btn" onClick={() => addToCart(product._id)}>
-                Add to Cart
-              </button>
+              {cartProductIds.includes(product._id) ? (
+                <button className="add-to-cart-btn" disabled>Added to Cart</button>
+              ) : (
+                <button className="add-to-cart-btn" onClick={() => addToCart(product._id)}>
+                  Add to Cart
+                </button>
+              )}
             </div>
           </div>
         ))}

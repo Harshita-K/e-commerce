@@ -46,6 +46,12 @@ const buynow = async (req, res) => {
             await order.save();
             createdOrders.push(order);
         }
+        // Remove bought products from user's cart
+        const user = await userModel.findById(buyerId);
+        if (user && user.cartdata) {
+            user.cartdata = user.cartdata.filter(item => !productIds.includes(item.productId.toString()));
+            await user.save();
+        }
         if (createdOrders.length === 0) {
             return res.json({ success: false, message: 'No valid orders could be created' });
         }

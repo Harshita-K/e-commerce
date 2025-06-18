@@ -1,9 +1,9 @@
 .sell-item-container {
-  max-width: 420px;
+  max-width: 500px;
   margin: 2rem auto;
   background: #fff;
-  border-radius: 16px;
-  box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+  border-radius: 12px;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.08);
   padding: 2rem 2.5rem 2.5rem 2.5rem;
 }
 
@@ -11,52 +11,80 @@
   text-align: center;
   margin-bottom: 1.5rem;
   color: #333;
+  font-size: 1.7rem;
+}
+
+.sell-item-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
 }
 
 .sell-item-form label {
-  display: block;
-  font-weight: 600;
-  margin-bottom: 0.3rem;
+  font-weight: 500;
   color: #444;
+  margin-bottom: 0.3rem;
 }
 
-.sell-item-form input,
+.sell-item-form input[type="text"],
+.sell-item-form input[type="number"],
 .sell-item-form textarea {
   width: 100%;
-  padding: 0.6rem 0.8rem;
-  margin-bottom: 1.1rem;
+  padding: 0.6rem 0.9rem;
   border: 1px solid #e0e0e0;
-  border-radius: 8px;
+  border-radius: 6px;
   font-size: 1rem;
   background: #fafbfc;
+  margin-bottom: 0.2rem;
   transition: border 0.2s;
 }
 
-.sell-item-form input:focus,
+.sell-item-form input[type="text"]:focus,
+.sell-item-form input[type="number"]:focus,
 .sell-item-form textarea:focus {
-  border: 1.5px solid #f09819;
+  border: 1.5px solid #43b581;
   outline: none;
 }
 
+.sell-item-form textarea {
+  min-height: 60px;
+  resize: vertical;
+}
+
+.category-checkboxes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+  margin-top: 0.2rem;
+}
+
+.category-checkboxes label {
+  font-weight: 400;
+  color: #555;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  margin-bottom: 0;
+}
+
 .sell-item-form button[type="submit"] {
-  width: 100%;
-  background: linear-gradient(90deg, #ff5858 0%, #f09819 100%);
+  margin-top: 1.2rem;
+  background: linear-gradient(90deg, #43b581 0%, #2d7d32 100%);
   color: #fff;
   border: none;
   border-radius: 20px;
-  padding: 0.8rem 0;
+  padding: 0.7rem 2rem;
   font-size: 1.1rem;
-  font-weight: 700;
+  font-weight: 600;
   cursor: pointer;
-  margin-top: 0.5rem;
   transition: background 0.3s, box-shadow 0.3s, transform 0.2s;
-  box-shadow: 0 2px 8px rgba(255, 88, 88, 0.08);
+  box-shadow: 0 2px 8px rgba(67, 181, 129, 0.13);
 }
 
 .sell-item-form button[type="submit"]:hover {
-  background: linear-gradient(90deg, #f09819 0%, #ff5858 100%);
-  box-shadow: 0 4px 16px rgba(255, 88, 88, 0.18);
-  transform: translateY(-2px) scale(1.03);
+  background: linear-gradient(90deg, #2d7d32 0%, #43b581 100%);
+  box-shadow: 0 4px 16px rgba(67, 181, 129, 0.18);
+  transform: translateY(-2px) scale(1.04);
 }
 
 .error-message {

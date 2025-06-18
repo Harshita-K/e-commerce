@@ -5,7 +5,7 @@ const productSchema = new mongoose.Schema({
     description: { type: String },
     price: { type: Number, required: true },
     image: { type: Array },
-    category: { type: String },
+    category: { type: Array,  default: {} },
     owner: { type: String, required: true },
     status: { type: String, enum: ['available', 'sold'], default: 'available' }
 })
