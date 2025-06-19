@@ -8,6 +8,8 @@ const Shop = () => {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [cartProductIds, setCartProductIds] = useState([]);
+  const [selectedCategories, setSelectedCategories] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
     const fetchAllProducts = async () => {
@@ -66,17 +68,87 @@ const Shop = () => {
     }
   };
 
+  // Get unique categories from products
+  const allCategories = Array.from(new Set(products.flatMap(p => {
+    if (!p.category) return [];
+    if (Array.isArray(p.category)) return p.category;
+    if (typeof p.category === 'string') return p.category.split(',');
+    return [];
+  })));
+
+  // Filter products by selected categories and search term
+  const filteredProducts = products.filter(product => {
+    // Filter by search term (name)
+    const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase());
+    
+    // Filter by categories
+    const matchesCategory = selectedCategories.length === 0 || (() => {
+      if (!product.category) return false;
+      const productCategories = Array.isArray(product.category) 
+        ? product.category 
+        : typeof product.category === 'string' 
+          ? product.category.split(',') 
+          : [];
+      return selectedCategories.some(cat => productCategories.includes(cat));
+    })();
+    
+    return matchesSearch && matchesCategory;
+  });
+
   return (
     <div className="shop-container">
       <h2>Available Products</h2>
+      
+      {/* Search Bar */}
+      <div style={{ marginBottom: '1rem' }}>
+        <input
+          type="text"
+          placeholder="Search products by name..."
+          value={searchTerm}
+          onChange={e => setSearchTerm(e.target.value)}
+          style={{
+            width: '100%',
+            maxWidth: '400px',
+            padding: '0.7rem',
+            border: '1px solid #ddd',
+            borderRadius: '8px',
+            fontSize: '1rem'
+          }}
+        />
+      </div>
+
+      {/* Category Filter */}
+      <div style={{ marginBottom: '1.5rem' }}>
+        <label style={{ marginBottom: '0.5rem', display: 'block' }}>Filter by Category:</label>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem' }}>
+          {allCategories.map(cat => (
+            <label key={cat} style={{ display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
+              <input
+                type="checkbox"
+                value={cat}
+                checked={selectedCategories.includes(cat)}
+                onChange={e => {
+                  if (e.target.checked) {
+                    setSelectedCategories(prev => [...prev, cat]);
+                  } else {
+                    setSelectedCategories(prev => prev.filter(c => c !== cat));
+                  }
+                }}
+              />
+              {cat}
+            </label>
+          ))}
+        </div>
+      </div>
+
       {loading && <div className="loading">Loading products...</div>}
       {error && <div className="error-message">{error}</div>}
       {success && <div className="success-message">{success}</div>}
-      {!loading && !error && products.length === 0 && (
-        <div className="empty-message">No products available at the moment.</div>
+      {!loading && !error && filteredProducts.length === 0 && (
+        <div className="empty-message">No products found matching your search criteria.</div>
       )}
       <div className="products-grid">
-        {products.map(product => (
+        {filteredProducts.map(product => (
           <div className="product-card" key={product._id}>
             {product.image && (
               <img 
