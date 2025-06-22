@@ -157,6 +157,36 @@ const Profile = () => {
     }
   };
 
+  const handleDeleteAccount = async () => {
+    const confirmed = window.confirm('Are you sure you want to delete your account? This action cannot be undone.');
+    if (!confirmed) return;
+    
+    try {
+      setError('');
+      setSuccess('');
+      const token = localStorage.getItem('token');
+      if (!token) {
+        navigate('/login');
+        return;
+      }
+      
+      const response = await axios.delete('http://localhost:8080/api/users/profile/delete', {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      
+      if (response.data.success) {
+        localStorage.removeItem('token');
+        alert('Account deleted successfully');
+        navigate('/');
+        window.location.reload();
+      } else {
+        setError(response.data.message || 'Failed to delete account');
+      }
+    } catch (err) {
+      setError(err.response?.data?.message || 'An error occurred while deleting account');
+    }
+  };
+
   if (loading) {
     return <div className="loading-container">Loading profile data...</div>;
   }
@@ -236,6 +266,7 @@ const Profile = () => {
               <div className="profile-actions">
                 <button className="edit-button" onClick={toggleEditMode}>Edit Profile</button>
                 <button className="change-password-button" onClick={() => setShowPasswordForm(!showPasswordForm)} style={{marginLeft: '1rem'}}>Change Password</button>
+                <button className="delete-account-button" onClick={handleDeleteAccount} style={{marginLeft: '1rem'}}>Delete Account</button>
               </div>
             </>
           )}

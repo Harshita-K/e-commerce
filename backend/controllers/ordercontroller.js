@@ -83,13 +83,22 @@ const myOrders = async (req, res) => {
         let orders = await orderModel.find({ buyer: userId })
             .populate('product')
             .populate('seller', 'name email');
-        // Filter out orders where the product does not exist
+        // Filter out orders where the product or seller does not exist
         const validOrders = [];
         for (const order of orders) {
             if (!order.product) {
                 await orderModel.findByIdAndDelete(order._id);
+            } else if (!order.seller) {
+                // If seller is not populated or doesn't exist, delete the order
+                await orderModel.findByIdAndDelete(order._id);
             } else {
-                validOrders.push(order);
+                // Check if seller still exists in database
+                const sellerExists = await userModel.findById(order.seller._id || order.seller);
+                if (!sellerExists) {
+                    await orderModel.findByIdAndDelete(order._id);
+                } else {
+                    validOrders.push(order);
+                }
             }
         }
         res.json({ success: true, orders: validOrders });
@@ -120,13 +129,22 @@ const myDelivery = async (req, res) => {
         let orders = await orderModel.find({ seller: userId, status: 'pending' })
             .populate('product')
             .populate('buyer', 'name email');
-        // Filter out orders where the product does not exist
+        // Filter out orders where the product or buyer does not exist
         const validOrders = [];
         for (const order of orders) {
             if (!order.product) {
                 await orderModel.findByIdAndDelete(order._id);
+            } else if (!order.buyer) {
+                // If buyer is not populated or doesn't exist, delete the order
+                await orderModel.findByIdAndDelete(order._id);
             } else {
-                validOrders.push(order);
+                // Check if buyer still exists in database
+                const buyerExists = await userModel.findById(order.buyer._id || order.buyer);
+                if (!buyerExists) {
+                    await orderModel.findByIdAndDelete(order._id);
+                } else {
+                    validOrders.push(order);
+                }
             }
         }
         res.json({ success: true, orders: validOrders });

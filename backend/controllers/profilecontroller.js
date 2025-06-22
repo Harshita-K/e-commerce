@@ -64,4 +64,22 @@ const changeUserPassword = async (req, res) => {
     }
 }
 
-export { getUserDetails , updateUserDetails, changeUserPassword };
+const deleteUser = async (req, res) => {
+    try {
+        const userId = req.user.ID; // This comes from the middleware
+        
+        // Delete the user from database
+        const deletedUser = await userModel.findByIdAndDelete(userId);
+        
+        if (!deletedUser) {
+            return res.json({ success: false, message: "User not found" });
+        }
+        
+        res.json({ success: true, message: "User account deleted successfully" });
+    } catch (error) {
+        console.log("Delete user error:", error);
+        res.json({ success: false, message: error.message });
+    }
+}
+
+export { getUserDetails , updateUserDetails, changeUserPassword, deleteUser };

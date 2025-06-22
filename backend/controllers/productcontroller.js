@@ -1,4 +1,5 @@
 import productModel from "../models/productmodel.js";
+import userModel from "../models/usermodel.js";
 import jwt from "jsonwebtoken";
 
 const createProduct = async (req, res) => {
@@ -55,12 +56,24 @@ const getAllProducts = async (req, res) => {
         }
         
         // Find products that don't belong to the current user
-        const products = userId 
+        let products = userId 
             ? await productModel.find({ owner: { $ne: userId }, status: 'available' })
-            : await productModel.find({});
+            : await productModel.find({ status: 'available' });
+        
+        // Check if each product's owner exists in database
+        const validProducts = [];
+        for (const product of products) {
+            const owner = await userModel.findById(product.owner);
+            if (!owner) {
+                // Delete product if owner doesn't exist
+                await productModel.findByIdAndDelete(product._id);
+            } else {
+                validProducts.push(product);
+            }
+        }
             
-        console.log(`Found ${products.length} products for userId: ${userId}`); // Debug log
-        res.json({ success: true, products });
+        console.log(`Found ${validProducts.length} valid products for userId: ${userId}`); // Debug log
+        res.json({ success: true, products: validProducts });
     } catch (error) {
         console.error(error);
         res.json({ success: false, message: error.message });
@@ -124,6 +137,14 @@ const getProductById = async (req, res) => {
         const product = await productModel.findById(productId);
         
         if (!product) {
+            return res.json({ success: false, message: "Product not found" });
+        }
+        
+        // Check if product's owner exists in database
+        const owner = await userModel.findById(product.owner);
+        if (!owner) {
+            // Delete product if owner doesn't exist
+            await productModel.findByIdAndDelete(product._id);
             return res.json({ success: false, message: "Product not found" });
         }
         

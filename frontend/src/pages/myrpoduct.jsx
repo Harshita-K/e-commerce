@@ -100,41 +100,147 @@ const MyProduct = () => {
 
   return (
     <div className="my-products-container">
-      <h2>My Products</h2>
-      {loading && <div className="loading">Loading...</div>}
-      {error && <div className="error-message">{error}</div>}
-      {!loading && !error && products.length === 0 && (
-        <div className="empty-message">You have not listed any products yet.</div>
+      <div className="page-header">
+        <h2>My Products</h2>
+        <p className="page-subtitle">Manage your listed products</p>
+      </div>
+      
+      {loading && (
+        <div className="loading-container">
+          <div className="loading-spinner"></div>
+          <p>Loading your products...</p>
+        </div>
       )}
+      
+      {error && (
+        <div className="error-message">
+          <i className="error-icon">⚠️</i>
+          {error}
+        </div>
+      )}
+      
+      {!loading && !error && products.length === 0 && (
+        <div className="empty-state">
+          <div className="empty-icon">📦</div>
+          <h3>No products yet</h3>
+          <p>You haven't listed any products. Start selling by adding your first product!</p>
+        </div>
+      )}
+      
       <div className="products-grid">
         {products.map(product => (
           <div className="product-card" key={product._id}>
             {editingProduct === product._id ? (
-              <form className="edit-product-form" onSubmit={handleEditSubmit}>
-                <input type="text" name="name" value={editForm.name} onChange={handleEditChange} required />
-                <textarea name="description" value={editForm.description} onChange={handleEditChange} />
-                <input type="number" name="price" value={editForm.price} onChange={handleEditChange} required min="0" />
-                <input type="text" name="image" value={editForm.image} onChange={handleEditChange} />
-                <input type="text" name="category" value={editForm.category} onChange={handleEditChange} />
-                <div className="edit-actions">
-                  <button type="submit">Save</button>
-                  <button type="button" onClick={handleCancelEdit}>Cancel</button>
+              <div className="edit-product-container">
+                <div className="edit-header">
+                  <h4>Edit Product</h4>
                 </div>
-              </form>
-            ) : (
-              <>
-                {product.image && <img src={product.image} alt={product.name} className="product-image" />}
-                <div className="product-info">
-                  <h3>{product.name}</h3>
-                  <p className="product-desc">{product.description}</p>
-                  <div className="product-meta">
-                    <span className="product-price">₹{product.price}</span>
-                    <span className="product-category">{product.category}</span>
+                <form className="edit-product-form" onSubmit={handleEditSubmit}>
+                  <div className="form-group">
+                    <label>Product Name</label>
+                    <input 
+                      type="text" 
+                      name="name" 
+                      value={editForm.name} 
+                      onChange={handleEditChange} 
+                      placeholder="Enter product name"
+                      required 
+                    />
                   </div>
-                  <button className="edit-btn" onClick={() => handleEditClick(product)}>Edit</button>
-                  <button className="delete-btn" onClick={() => handleDeleteProduct(product._id)}>Delete</button>
+                  
+                  <div className="form-group">
+                    <label>Description</label>
+                    <textarea 
+                      name="description" 
+                      value={editForm.description} 
+                      onChange={handleEditChange}
+                      placeholder="Describe your product"
+                      rows="3"
+                    />
+                  </div>
+                  
+                  <div className="form-row">
+                    <div className="form-group">
+                      <label>Price (₹)</label>
+                      <input 
+                        type="number" 
+                        name="price" 
+                        value={editForm.price} 
+                        onChange={handleEditChange}
+                        placeholder="0"
+                        required 
+                        min="0" 
+                      />
+                    </div>
+                    
+                    <div className="form-group">
+                      <label>Category</label>
+                      <input 
+                        type="text" 
+                        name="category" 
+                        value={editForm.category} 
+                        onChange={handleEditChange}
+                        placeholder="e.g., Electronics"
+                      />
+                    </div>
+                  </div>
+                  
+                  <div className="form-group">
+                    <label>Image URL</label>
+                    <input 
+                      type="text" 
+                      name="image" 
+                      value={editForm.image} 
+                      onChange={handleEditChange}
+                      placeholder="https://example.com/image.jpg"
+                    />
+                  </div>
+                  
+                  <div className="edit-actions">
+                    <button type="submit" className="save-btn">
+                      <span>💾</span> Save Changes
+                    </button>
+                    <button type="button" className="cancel-btn" onClick={handleCancelEdit}>
+                      <span>❌</span> Cancel
+                    </button>
+                  </div>
+                </form>
+              </div>
+            ) : (
+              <div className="product-display">
+                {product.image && Array.isArray(product.image) && product.image.length > 0 && product.image[0] ? (
+                  <div className="product-image-container">
+                    <img src={product.image[0]} alt={product.name} className="product-image" />
+                    <div className="product-status">
+                      <span className="status-badge">{product.status || 'Available'}</span>
+                    </div>
+                  </div>
+                ) : null}
+                
+                <div className="product-content">
+                  <div className="product-header">
+                    <h3 className="product-name">{product.name}</h3>
+                    <div className="product-price">₹{product.price}</div>
+                  </div>
+                  
+                  <p className="product-description">{product.description || 'No description provided'}</p>
+                  
+                  {product.category && (
+                    <div className="product-category">
+                      <span className="category-tag">{product.category}</span>
+                    </div>
+                  )}
+                  
+                  <div className="product-actions">
+                    <button className="edit-btn" onClick={() => handleEditClick(product)}>
+                      <span>✏️</span> Edit
+                    </button>
+                    <button className="delete-btn" onClick={() => handleDeleteProduct(product._id)}>
+                      <span>🗑️</span> Delete
+                    </button>
+                  </div>
                 </div>
-              </>
+              </div>
             )}
           </div>
         ))}

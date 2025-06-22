@@ -8,6 +8,7 @@ const Shop = () => {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [cartProductIds, setCartProductIds] = useState([]);
+  const [orderedProductIds, setOrderedProductIds] = useState([]);
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
 
@@ -29,6 +30,13 @@ const Shop = () => {
           const cartRes = await axios.get('http://localhost:8080/api/products/cart', { headers });
           if (cartRes.data.success) {
             setCartProductIds((cartRes.data.cartdata || []).map(item => item.productId));
+          }
+          
+          // Fetch user's orders to check which products are already ordered
+          const ordersRes = await axios.get('http://localhost:8080/api/orders/myorders', { headers });
+          if (ordersRes.data.success) {
+            const orderedIds = ordersRes.data.orders.map(order => order.product?._id || order.product);
+            setOrderedProductIds(orderedIds);
           }
         }
       } catch (err) {
@@ -167,7 +175,9 @@ const Shop = () => {
                 <span className="product-price">₹{product.price}</span>
                 <span className="product-category">{product.category}</span>
               </div>
-              {cartProductIds.includes(product._id) ? (
+              {orderedProductIds.includes(product._id) ? (
+                <button className="ordered-btn" disabled>Ordered</button>
+              ) : cartProductIds.includes(product._id) ? (
                 <button className="add-to-cart-btn" disabled>Added to Cart</button>
               ) : (
                 <button className="add-to-cart-btn" onClick={() => addToCart(product._id)}>

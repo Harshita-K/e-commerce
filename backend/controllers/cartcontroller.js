@@ -95,7 +95,14 @@ const showCart = async (req, res) => {
         for (const item of user.cartdata || []) {
             const product = await productModel.findById(item.productId);
             if (product && product.status === 'available') {
-                updatedCart.push(item);
+                // Check if product's owner exists in database
+                const owner = await userModel.findById(product.owner);
+                if (owner) {
+                    updatedCart.push(item);
+                } else {
+                    // Delete product if owner doesn't exist
+                    await productModel.findByIdAndDelete(product._id);
+                }
             }
         }
         // If cart was changed, update in DB

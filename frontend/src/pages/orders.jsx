@@ -46,6 +46,11 @@ const Orders = () => {
       <div className="orders-list">
         {orders.map(order => (
           <div className="order-card" key={order._id}>
+            {order.product?.image && Array.isArray(order.product.image) && order.product.image.length > 0 && order.product.image[0] && (
+              <div className="order-product-image">
+                <img src={order.product.image[0]} alt={order.product?.name || 'Product'} />
+              </div>
+            )}
             <div className="order-info">
               <div><strong>Order ID:</strong> {order._id}</div>
               <div><strong>Transaction ID:</strong> {order.transactionId}</div>

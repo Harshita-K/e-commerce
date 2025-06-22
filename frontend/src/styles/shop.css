@@ -127,3 +127,52 @@
   box-shadow: 0 4px 16px rgba(67, 181, 129, 0.3);
   transform: translateY(-2px) scale(1.05);
 }
+
+.add-to-cart-btn {
+  background: linear-gradient(135deg, #007bff, #0056b3);
+  color: white;
+  border: none;
+  padding: 0.7rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 100%;
+  margin-top: 1rem;
+}
+
+.add-to-cart-btn:hover {
+  background: linear-gradient(135deg, #0056b3, #007bff);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+}
+
+.add-to-cart-btn:disabled {
+  background: linear-gradient(135deg, #6c757d, #495057);
+  cursor: not-allowed;
+  opacity: 0.8;
+}
+
+.add-to-cart-btn:disabled:hover {
+  background: linear-gradient(135deg, #495057, #6c757d);
+  transform: none;
+  box-shadow: none;
+}
+
+.ordered-btn {
+  background: linear-gradient(135deg, #28a745, #20c997);
+  color: white;
+  border: none;
+  padding: 0.7rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: not-allowed;
+  opacity: 0.8;
+  transition: all 0.3s ease;
+  width: 100%;
+  margin-top: 1rem;
+}
+
+.ordered-btn:hover {
+  background: linear-gradient(135deg, #20c997, #28a745);
+}
