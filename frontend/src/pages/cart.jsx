@@ -105,7 +105,6 @@ const Cart = () => {
       });
       if (response.data.success) {
         setCartItems([]);
-        alert('Order placed successfully for all items!');
       } else {
         setError(response.data.message || 'Failed to place order');
       }

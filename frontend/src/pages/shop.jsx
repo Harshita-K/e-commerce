@@ -166,7 +166,19 @@ const Shop = () => {
               <p className="product-desc">{product.description}</p>
               <div className="product-meta">
                 <span className="product-price">₹{product.price}</span>
-                <span className="product-category">{product.category}</span>
+                <div className="product-categories">
+                  {(() => {
+                    if (!product.category) return null;
+                    const categories = Array.isArray(product.category) 
+                      ? product.category 
+                      : typeof product.category === 'string' 
+                        ? product.category.split(',').map(cat => cat.trim())
+                        : [product.category];
+                    return categories.map((cat, index) => (
+                      <span key={index} className="product-category">{cat}</span>
+                    ));
+                  })()}
+                </div>
               </div>
               {orderedProductIds.includes(product._id) ? (
                 <button className="ordered-btn" disabled>Ordered</button>

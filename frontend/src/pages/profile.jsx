@@ -176,8 +176,7 @@ const Profile = () => {
       
       if (response.data.success) {
         localStorage.removeItem('token');
-        alert('Account deleted successfully');
-        navigate('/');
+        navigate('/login');
         window.location.reload();
       } else {
         setError(response.data.message || 'Failed to delete account');

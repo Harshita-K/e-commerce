@@ -9,6 +9,8 @@ const Login = () => {
     email: '',
     password: ''
   })
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const handleChange = (e) => {
     setFormData({
@@ -19,6 +21,8 @@ const Login = () => {
   
   const handleLogin = async (e) => {
     e.preventDefault()
+    setError(''); // Clear previous errors
+    setLoading(true);
     
     try {
       console.log('Logging in with:', formData)
@@ -29,21 +33,21 @@ const Login = () => {
       // Handle successful login
       console.log('Login successful:', response.data);
       
-      // Save token to localStorage
-      if (response.data.token) {
+      // Check if login was successful
+      if (response.data.success && response.data.token) {
         localStorage.setItem('token', response.data.token);
         localStorage.setItem('user', JSON.stringify(response.data.user));
-        // window.location.href = '/shop'; // Redirect to home page after login
-        
-        // Redirect to homepage or shop
-        // Example if using react-router:
         navigate('/');
-      }
-      else {
-        console.error('Login failed:', response.data.message);
+      } else {
+        // Handle unsuccessful login
+        setError(response.data.message || 'Login failed');
       }
     } catch (error) {
       console.error('Login failed:', error);
+      // Display error message to user
+      setError(error.response?.data?.message || 'Login failed. Please try again.');
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -51,6 +55,14 @@ const Login = () => {
     <div className="login-container">
       <div className="login-form">
         <h2>Login</h2>
+        
+        {error && (
+          <div className="error-message">
+            <i className="error-icon">⚠️</i>
+            {error}
+          </div>
+        )}
+        
         <form onSubmit={handleLogin}>
           <div className="form-group">
             <label htmlFor="email">Email</label>
@@ -74,8 +86,8 @@ const Login = () => {
               required
             />
           </div>
-          <button type="submit" className="login-button">
-            Login
+          <button type="submit" className="login-button" disabled={loading}>
+            {loading ? 'Logging in...' : 'Login'}
           </button>
           <div className="register-option">
             <p>Don't have an account? <Link to="/signin">Sign Up</Link></p>

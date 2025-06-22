@@ -8,7 +8,8 @@ const Signin = () => {
     name: '',
     phoneNumber: '',
     email: '',
-    password: ''
+    password: '',
+    confirmPassword: ''
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -27,6 +28,20 @@ const Signin = () => {
     setLoading(true);
     setError(null);
 
+    // Check if passwords match
+    if (formData.password !== formData.confirmPassword) {
+      setError('Passwords do not match. Please try again.');
+      setLoading(false);
+      return;
+    }
+
+    // Check password length
+    if (formData.password.length < 6) {
+      setError('Password must be at least 6 characters long.');
+      setLoading(false);
+      return;
+    }
+
     try {
       console.log('Submitting form data:', formData);
       
@@ -39,7 +54,12 @@ const Signin = () => {
       });
       
       console.log('Response received:', response.data);
-      navigate('/login');
+      
+      if (response.data.success) {
+        navigate('/login');
+      } else {
+        setError(response.data.message || 'Registration failed');
+      }
     } catch (err) {
       console.error('Registration error:', err);
       setError(
@@ -102,6 +122,18 @@ const Signin = () => {
               id="password"
               name="password"
               value={formData.password}
+              onChange={handleChange}
+              required
+            />
+          </div>
+          
+          <div className="form-group">
+            <label htmlFor="confirmPassword">Confirm Password</label>
+            <input
+              type="password"
+              id="confirmPassword"
+              name="confirmPassword"
+              value={formData.confirmPassword}
               onChange={handleChange}
               required
             />
