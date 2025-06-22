@@ -46,10 +46,12 @@ const Navbar = ({ children }) => {
             </NavLink>
 
             <NavLink to="/" className={({ isActive }) => isActive ? "navbar-link active" : "navbar-link"}>
-              profile
+              Profile
             </NavLink>
 
-            <button className="navbar-link logout-btn" onClick={handleLogout} style={{marginLeft: '1rem'}}>Logout</button>
+            <button className="navbar-link logout-btn" onClick={handleLogout}>
+              Logout
+            </button>
           </div>
         </div>
       </nav>

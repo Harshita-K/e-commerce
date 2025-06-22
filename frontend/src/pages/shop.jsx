@@ -108,29 +108,22 @@ const Shop = () => {
       <h2>Available Products</h2>
       
       {/* Search Bar */}
-      <div style={{ marginBottom: '1rem' }}>
+      <div className="search-container">
         <input
           type="text"
           placeholder="Search products by name..."
           value={searchTerm}
           onChange={e => setSearchTerm(e.target.value)}
-          style={{
-            width: '100%',
-            maxWidth: '400px',
-            padding: '0.7rem',
-            border: '1px solid #ddd',
-            borderRadius: '8px',
-            fontSize: '1rem'
-          }}
+          className="search-input"
         />
       </div>
 
       {/* Category Filter */}
-      <div style={{ marginBottom: '1.5rem' }}>
-        <label style={{ marginBottom: '0.5rem', display: 'block' }}>Filter by Category:</label>
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem' }}>
+      <div className="category-filter-container">
+        <label className="category-filter-label">Filter by Category:</label>
+        <div className="category-checkboxes">
           {allCategories.map(cat => (
-            <label key={cat} style={{ display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
+            <div key={cat} className="category-checkbox-item">
               <input
                 type="checkbox"
                 value={cat}
@@ -143,8 +136,8 @@ const Shop = () => {
                   }
                 }}
               />
-              {cat}
-            </label>
+              <span>{cat}</span>
+            </div>
           ))}
         </div>
       </div>

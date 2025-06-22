@@ -1,106 +1,266 @@
+/* Modern Sell Item Page Styles */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
 .sell-item-container {
-  max-width: 500px;
-  margin: 2rem auto;
-  background: #fff;
-  border-radius: 12px;
-  box-shadow: 0 2px 16px rgba(0,0,0,0.08);
-  padding: 2rem 2.5rem 2.5rem 2.5rem;
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 2rem;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 }
 
 .sell-item-container h2 {
   text-align: center;
+  margin-bottom: 2rem;
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: white;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.error-message {
+  background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+  color: white;
+  padding: 1rem 1.5rem;
+  border-radius: 12px;
   margin-bottom: 1.5rem;
-  color: #333;
-  font-size: 1.7rem;
+  text-align: center;
+  font-weight: 500;
+  box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+  animation: slideIn 0.3s ease;
+}
+
+.success-message {
+  background: linear-gradient(135deg, #4CAF50, #45a049);
+  color: white;
+  padding: 1rem 1.5rem;
+  border-radius: 12px;
+  margin-bottom: 1.5rem;
+  text-align: center;
+  font-weight: 500;
+  box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+  animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 .sell-item-form {
-  display: flex;
-  flex-direction: column;
-  gap: 1.1rem;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  border-radius: 24px;
+  padding: 2.5rem;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.sell-item-form:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+}
+
+.sell-item-form > div {
+  margin-bottom: 1.5rem;
 }
 
 .sell-item-form label {
-  font-weight: 500;
-  color: #444;
-  margin-bottom: 0.3rem;
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: #2c3e50;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .sell-item-form input[type="text"],
 .sell-item-form input[type="number"],
 .sell-item-form textarea {
   width: 100%;
-  padding: 0.6rem 0.9rem;
-  border: 1px solid #e0e0e0;
-  border-radius: 6px;
+  padding: 1rem 1.2rem;
+  border: 2px solid #e9ecef;
+  border-radius: 12px;
   font-size: 1rem;
-  background: #fafbfc;
-  margin-bottom: 0.2rem;
-  transition: border 0.2s;
+  transition: all 0.3s ease;
+  background: rgba(248, 249, 250, 0.8);
+  color: #2c3e50;
+  font-family: inherit;
 }
 
 .sell-item-form input[type="text"]:focus,
 .sell-item-form input[type="number"]:focus,
 .sell-item-form textarea:focus {
-  border: 1.5px solid #43b581;
   outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+  background: white;
+  transform: translateY(-2px);
 }
 
 .sell-item-form textarea {
-  min-height: 60px;
   resize: vertical;
+  min-height: 100px;
 }
 
 .category-checkboxes {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem 1rem;
-  margin-top: 0.2rem;
+  gap: 1rem;
+  margin-top: 0.5rem;
 }
 
 .category-checkboxes label {
-  font-weight: 400;
-  color: #555;
   display: flex;
   align-items: center;
-  gap: 0.3rem;
+  gap: 0.5rem;
+  background: rgba(102, 126, 234, 0.1);
+  padding: 0.5rem 1rem;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: normal;
   margin-bottom: 0;
 }
 
+.category-checkboxes label:hover {
+  background: rgba(102, 126, 234, 0.2);
+  transform: translateY(-2px);
+}
+
+.category-checkboxes input[type="checkbox"] {
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border: 2px solid #667eea;
+  border-radius: 4px;
+  position: relative;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin: 0;
+}
+
+.category-checkboxes input[type="checkbox"]:checked {
+  background: #667eea;
+  border-color: #667eea;
+}
+
+.category-checkboxes input[type="checkbox"]:checked::after {
+  content: '✓';
+  position: absolute;
+  top: -2px;
+  left: 2px;
+  color: white;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.category-checkboxes input[type="checkbox"]:checked + span {
+  color: #667eea;
+  font-weight: 600;
+}
+
 .sell-item-form button[type="submit"] {
-  margin-top: 1.2rem;
-  background: linear-gradient(90deg, #43b581 0%, #2d7d32 100%);
-  color: #fff;
+  width: 100%;
+  padding: 1rem 1.5rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
   border: none;
-  border-radius: 20px;
-  padding: 0.7rem 2rem;
+  border-radius: 12px;
   font-size: 1.1rem;
   font-weight: 600;
   cursor: pointer;
-  transition: background 0.3s, box-shadow 0.3s, transform 0.2s;
-  box-shadow: 0 2px 8px rgba(67, 181, 129, 0.13);
+  transition: all 0.3s ease;
+  margin-top: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  position: relative;
+  overflow: hidden;
+}
+
+.sell-item-form button[type="submit"]::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.sell-item-form button[type="submit"]:hover::before {
+  left: 100%;
 }
 
 .sell-item-form button[type="submit"]:hover {
-  background: linear-gradient(90deg, #2d7d32 0%, #43b581 100%);
-  box-shadow: 0 4px 16px rgba(67, 181, 129, 0.18);
-  transform: translateY(-2px) scale(1.04);
+  background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+  transform: translateY(-3px);
+  box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
 }
 
-.error-message {
-  color: #fff;
-  background: #ff5858;
-  padding: 0.7rem 1rem;
-  border-radius: 8px;
-  margin-bottom: 1rem;
-  text-align: center;
+.sell-item-form button[type="submit"]:active {
+  transform: translateY(-1px);
 }
 
-.success-message {
-  color: #fff;
-  background: #43b581;
-  padding: 0.7rem 1rem;
-  border-radius: 8px;
-  margin-bottom: 1rem;
-  text-align: center;
+/* Responsive Design */
+@media (max-width: 768px) {
+  .sell-item-container {
+    padding: 1rem;
+  }
+  
+  .sell-item-container h2 {
+    font-size: 2rem;
+  }
+  
+  .sell-item-form {
+    padding: 1.5rem;
+  }
+  
+  .category-checkboxes {
+    gap: 0.5rem;
+  }
+  
+  .category-checkboxes label {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .sell-item-container {
+    padding: 0.5rem;
+  }
+  
+  .sell-item-container h2 {
+    font-size: 1.75rem;
+  }
+  
+  .sell-item-form {
+    padding: 1rem;
+  }
+  
+  .category-checkboxes {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .category-checkboxes label {
+    width: 100%;
+    justify-content: flex-start;
+  }
 }

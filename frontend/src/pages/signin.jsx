@@ -39,9 +39,6 @@ const Signin = () => {
       });
       
       console.log('Response received:', response.data);
-
-      // Axios handles non-2xx responses as errors, so if we reach here, it was successful
-      alert(response.data.message);
       navigate('/login');
     } catch (err) {
       console.error('Registration error:', err);

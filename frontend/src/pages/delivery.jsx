@@ -105,42 +105,98 @@ const Delivery = () => {
   };
 
   return (
-    <div className="orders-container">
-      <h2>My Deliveries</h2>
-      {loading && <div className="loading">Loading deliveries...</div>}
-      {error && <div className="error-message">{error}</div>}
-      {success && <div className="success-message">{success}</div>}
-      {!loading && !error && orders.length === 0 && (
-        <div className="empty-message">You have no deliveries yet.</div>
+    <div className="delivery-container">
+      <div className="page-header">
+        <h2>My Deliveries</h2>
+        <p className="page-subtitle">Manage and track your product deliveries</p>
+      </div>
+      
+      {loading && (
+        <div className="loading-container">
+          <div className="loading-spinner"></div>
+          <p>Loading your deliveries...</p>
+        </div>
       )}
-      <div className="orders-list">
+      
+      {error && (
+        <div className="error-message">
+          <i className="error-icon">⚠️</i>
+          {error}
+        </div>
+      )}
+      
+      {success && (
+        <div className="success-message">
+          <i className="success-icon">✅</i>
+          {success}
+        </div>
+      )}
+      
+      {!loading && !error && orders.length === 0 && (
+        <div className="empty-state">
+          <div className="empty-icon">📦</div>
+          <h3>No deliveries yet</h3>
+          <p>You have no orders to deliver at the moment.</p>
+        </div>
+      )}
+      <div className="orders-grid">
         {orders.map(order => (
           <div className="order-card" key={order._id}>
-            <div className="order-info">
-              <div><strong>Order ID:</strong> {order._id}</div>
-              <div><strong>Transaction ID:</strong> {order.transactionId}</div>
-              <div><strong>Status:</strong> {order.status}</div>
-              <div><strong>Product:</strong> {order.product?.name || order.product}</div>
-              <div><strong>Price:</strong> ₹{order.price}</div>
-              <div><strong>Buyer:</strong> {order.buyer?.name || order.buyer}</div>
-              <div><strong>Placed On:</strong> {new Date(order.createdAt).toLocaleString()}</div>
-              <button className="otp-btn" onClick={() => handleGenerateOtp(order._id)}>
-                Generate OTP
-              </button>
-              {verifyingOrderId === order._id && (
-                <div className="otp-verify-section">
-                  <input
-                    type="text"
-                    placeholder="Enter OTP"
-                    value={otpInputs[order._id] || ''}
-                    onChange={e => handleOtpInputChange(order._id, e.target.value)}
-                    className="otp-input"
-                  />
-                  <button className="verify-otp-btn" onClick={() => handleVerifyOtp(order._id)}>
-                    Verify OTP
-                  </button>
+            {order.product?.image && Array.isArray(order.product.image) && order.product.image.length > 0 && order.product.image[0] && (
+              <div className="order-product-image-container">
+                <img src={order.product.image[0]} alt={order.product?.name || 'Product'} className="order-product-image" />
+              </div>
+            )}
+            
+            <div className="order-content">
+              <div className="order-header">
+                <h3 className="order-title">Order #{order._id.slice(-8)}</h3>
+                <div className="order-status">{order.status}</div>
+              </div>
+              
+              <div className="order-details">
+                <div className="detail-row">
+                  <span className="detail-label">Transaction ID:</span>
+                  <span className="detail-value">{order.transactionId}</span>
                 </div>
-              )}
+                <div className="detail-row">
+                  <span className="detail-label">Product:</span>
+                  <span className="detail-value">{order.product?.name || order.product}</span>
+                </div>
+                <div className="detail-row">
+                  <span className="detail-label">Price:</span>
+                  <span className="detail-value">₹{order.price}</span>
+                </div>
+                <div className="detail-row">
+                  <span className="detail-label">Buyer:</span>
+                  <span className="detail-value">{order.buyer?.name || order.buyer}</span>
+                </div>
+                <div className="detail-row">
+                  <span className="detail-label">Placed On:</span>
+                  <span className="detail-value">{new Date(order.createdAt).toLocaleString()}</span>
+                </div>
+              </div>
+              
+              <div className="order-actions">
+                <button className="otp-btn" onClick={() => handleGenerateOtp(order._id)}>
+                  <span>🔐</span> Generate OTP
+                </button>
+                
+                {verifyingOrderId === order._id && (
+                  <div className="otp-verify-section">
+                    <input
+                      type="text"
+                      placeholder="Enter OTP"
+                      value={otpInputs[order._id] || ''}
+                      onChange={e => handleOtpInputChange(order._id, e.target.value)}
+                      className="otp-input"
+                    />
+                    <button className="verify-otp-btn" onClick={() => handleVerifyOtp(order._id)}>
+                      <span>✅</span> Verify OTP
+                    </button>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         ))}

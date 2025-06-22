@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import '../styles/sellItem.css'; // Assuming you have a CSS file for styling
 
 const CATEGORY_OPTIONS = [
-  'sports', 'electronics', 'clothing', 'books', 'furniture', 'toys', 'slave', 'other'
+  'sports', 'electronics', 'clothing', 'books', 'furniture', 'toys', 'food', 'other'
 ];
 
 const SellItem = () => {
@@ -90,7 +90,7 @@ const SellItem = () => {
           <label>Category</label>
           <div className="category-checkboxes">
             {CATEGORY_OPTIONS.map(option => (
-              <label key={option} style={{ marginRight: '1rem' }}>
+              <label key={option}>
                 <input
                   type="checkbox"
                   name="category"
@@ -106,7 +106,7 @@ const SellItem = () => {
                     setForm(prev => ({ ...prev, category: newCategories.join(',') }));
                   }}
                 />
-                {option}
+                <span>{option}</span>
               </label>
             ))}
           </div>

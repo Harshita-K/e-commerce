@@ -37,31 +37,75 @@ const Orders = () => {
 
   return (
     <div className="orders-container">
-      <h2>My Orders</h2>
-      {loading && <div className="loading">Loading orders...</div>}
-      {error && <div className="error-message">{error}</div>}
-      {!loading && !error && orders.length === 0 && (
-        <div className="empty-message">You have not placed any orders yet.</div>
+      <div className="page-header">
+        <h2>My Orders</h2>
+        <p className="page-subtitle">Track and manage your order history</p>
+      </div>
+      
+      {loading && (
+        <div className="loading-container">
+          <div className="loading-spinner"></div>
+          <p>Loading your orders...</p>
+        </div>
       )}
-      <div className="orders-list">
+      
+      {error && (
+        <div className="error-message">
+          <i className="error-icon">⚠️</i>
+          {error}
+        </div>
+      )}
+      
+      {!loading && !error && orders.length === 0 && (
+        <div className="empty-state">
+          <div className="empty-icon">📋</div>
+          <h3>No orders yet</h3>
+          <p>You haven't placed any orders yet.</p>
+        </div>
+      )}
+      <div className="orders-grid">
         {orders.map(order => (
           <div className="order-card" key={order._id}>
             {order.product?.image && Array.isArray(order.product.image) && order.product.image.length > 0 && order.product.image[0] && (
-              <div className="order-product-image">
-                <img src={order.product.image[0]} alt={order.product?.name || 'Product'} />
+              <div className="order-product-image-container">
+                <img src={order.product.image[0]} alt={order.product?.name || 'Product'} className="order-product-image" />
               </div>
             )}
-            <div className="order-info">
-              <div><strong>Order ID:</strong> {order._id}</div>
-              <div><strong>Transaction ID:</strong> {order.transactionId}</div>
-              <div><strong>Status:</strong> {order.status}</div>
-              <div><strong>Product:</strong> {order.product?.name || order.product}</div>
-              <div><strong>Price:</strong> ₹{order.price}</div>
-              <div><strong>Seller:</strong> {order.seller?.name || order.seller}</div>
-              <div><strong>Placed On:</strong> {new Date(order.createdAt).toLocaleString()}</div>
-              {order.otp && (
-                <div><strong>OTP:</strong> {order.otp}</div>
-              )}
+            
+            <div className="order-content">
+              <div className="order-header">
+                <h3 className="order-title">Order #{order._id.slice(-8)}</h3>
+                <div className="order-status">{order.status}</div>
+              </div>
+              
+              <div className="order-details">
+                <div className="detail-row">
+                  <span className="detail-label">Transaction ID:</span>
+                  <span className="detail-value">{order.transactionId}</span>
+                </div>
+                <div className="detail-row">
+                  <span className="detail-label">Product:</span>
+                  <span className="detail-value">{order.product?.name || order.product}</span>
+                </div>
+                <div className="detail-row">
+                  <span className="detail-label">Price:</span>
+                  <span className="detail-value">₹{order.price}</span>
+                </div>
+                <div className="detail-row">
+                  <span className="detail-label">Seller:</span>
+                  <span className="detail-value">{order.seller?.name || order.seller}</span>
+                </div>
+                <div className="detail-row">
+                  <span className="detail-label">Placed On:</span>
+                  <span className="detail-value">{new Date(order.createdAt).toLocaleString()}</span>
+                </div>
+                {order.otp && (
+                  <div className="detail-row">
+                    <span className="detail-label">OTP:</span>
+                    <span className="detail-value otp-value">{order.otp}</span>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         ))}

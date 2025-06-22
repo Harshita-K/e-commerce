@@ -38,28 +38,12 @@ const Login = () => {
         // Redirect to homepage or shop
         // Example if using react-router:
         navigate('/');
-        
-        alert('Login successful!');
       }
       else {
         console.error('Login failed:', response.data.message);
-        alert(response.data.message);
       }
     } catch (error) {
       console.error('Login failed:', error);
-      
-      // Handle different types of errors
-      if (error.response) {
-        // The request was made and the server responded with a status code
-        // that falls out of the range of 2xx
-        alert(`Login failed: ${error.response.data.message || 'Invalid credentials'}`);
-      } else if (error.request) {
-        // The request was made but no response was received
-        alert('Server not responding. Please try again later.');
-      } else {
-        // Something happened in setting up the request
-        alert('Error during login. Please try again.');
-      }
     }
   }
 

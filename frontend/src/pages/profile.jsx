@@ -265,7 +265,11 @@ const Profile = () => {
               
               <div className="profile-actions">
                 <button className="edit-button" onClick={toggleEditMode}>Edit Profile</button>
-                <button className="change-password-button" onClick={() => setShowPasswordForm(!showPasswordForm)} style={{marginLeft: '1rem'}}>Change Password</button>
+                <button className="change-password-button" onClick={() => {
+                  setShowPasswordForm(!showPasswordForm);
+                  setError('');
+                  setSuccess('');
+                }}>Change Password</button>
                 <button className="delete-account-button" onClick={handleDeleteAccount} style={{marginLeft: '1rem'}}>Delete Account</button>
               </div>
             </>
@@ -288,7 +292,12 @@ const Profile = () => {
             </div>
             <div className="profile-actions">
               <button className="save-button" onClick={handleChangePassword}>Save Password</button>
-              <button className="cancel-button" onClick={() => setShowPasswordForm(false)}>Cancel</button>
+              <button className="cancel-button" onClick={() => {
+                setShowPasswordForm(false);
+                setError('');
+                setSuccess('');
+                setPasswords({ oldPassword: '', newPassword: '', confirmNewPassword: '' });
+              }}>Cancel</button>
             </div>
           </div>
         )}

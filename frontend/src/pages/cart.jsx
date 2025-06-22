@@ -118,42 +118,89 @@ const Cart = () => {
 
   return (
     <div className="cart-container">
-      <h2>My Cart</h2>
-      {loading && <div className="loading">Loading cart...</div>}
-      {error && <div className="error-message">{error}</div>}
+      <div className="page-header">
+        <h2>My Cart</h2>
+        <p className="page-subtitle">Review and manage your selected items</p>
+      </div>
+      
+      {loading && (
+        <div className="loading-container">
+          <div className="loading-spinner"></div>
+          <p>Loading your cart...</p>
+        </div>
+      )}
+      
+      {error && (
+        <div className="error-message">
+          <i className="error-icon">⚠️</i>
+          {error}
+        </div>
+      )}
+      
       {!loading && !error && cartItems.filter(item => item.product).length === 0 && (
-        <div className="empty-message">Your cart is empty.</div>
+        <div className="empty-state">
+          <div className="empty-icon">🛒</div>
+          <h3>Your cart is empty</h3>
+          <p>Add some products to your cart to get started!</p>
+        </div>
       )}
       {!loading && !error && cartItems.filter(item => item.product).length > 0 && (
         <>
-          <div className="cart-items">
+          <div className="cart-grid">
             {cartItems.filter(item => item.product).map((item, index) => (
-              <div className="cart-item" key={index}>
-                {item.product.image && (
-                  <img 
-                    src={item.product.image} 
-                    alt={item.product.name} 
-                    className="cart-item-image"
-                  />
-                )}
-                <div className="item-info">
-                  <h4>{item.product.name}</h4>
-                  <p className="item-description">{item.product.description}</p>
-                  <p className="item-category">Category: {item.product.category}</p>
-                  <p className="item-price">₹{item.product.price}</p>
-                  <p className="item-quantity">Quantity: {item.quantity}</p>
-                  <p className="item-total">Total: ₹{item.product.price * item.quantity}</p>
-                  <button className="remove-btn" onClick={() => removeFromCart(item.productId)}>Remove</button>
+              <div className="cart-card" key={index}>
+                {item.product.image && Array.isArray(item.product.image) && item.product.image.length > 0 && item.product.image[0] ? (
+                  <div className="cart-item-image-container">
+                    <img src={item.product.image[0]} alt={item.product.name} className="cart-item-image" />
+                  </div>
+                ) : null}
+                
+                <div className="cart-item-content">
+                  <div className="cart-item-header">
+                    <h3 className="cart-item-name">{item.product.name}</h3>
+                    <div className="cart-item-price">₹{item.product.price}</div>
+                  </div>
+                  
+                  <p className="cart-item-description">{item.product.description || 'No description provided'}</p>
+                  
+                  {item.product.category && (
+                    <div className="cart-item-category">
+                      <span className="category-tag">{item.product.category}</span>
+                    </div>
+                  )}
+                  
+                  <div className="cart-item-details">
+                    <div className="quantity-info">Quantity: {item.quantity}</div>
+                    <div className="total-price">Total: ₹{item.product.price * item.quantity}</div>
+                  </div>
+                  
+                  <div className="cart-item-actions">
+                    <button className="remove-btn" onClick={() => removeFromCart(item.productId)}>
+                      <span>🗑️</span> Remove
+                    </button>
+                  </div>
                 </div>
               </div>
             ))}
           </div>
-          <div className="cart-total">
-            <h3>Total Items: {cartItems.filter(item => item.product).length}</h3>
-            <h3>Total Amount: ₹{cartItems.filter(item => item.product).reduce((total, item) => total + (item.product.price * item.quantity), 0)}</h3>
-            <button className="buy-btn" onClick={buyNow} disabled={cartItems.filter(item => item.product).length === 0 || loading}>
-              Buy Now
-            </button>
+          
+          <div className="cart-summary">
+            <div className="summary-card">
+              <h3>Order Summary</h3>
+              <div className="summary-details">
+                <div className="summary-row">
+                  <span>Total Items:</span>
+                  <span>{cartItems.filter(item => item.product).length}</span>
+                </div>
+                <div className="summary-row total-amount">
+                  <span>Total Amount:</span>
+                  <span>₹{cartItems.filter(item => item.product).reduce((total, item) => total + (item.product.price * item.quantity), 0)}</span>
+                </div>
+              </div>
+              <button className="buy-btn" onClick={buyNow} disabled={cartItems.filter(item => item.product).length === 0 || loading}>
+                <span>🛒</span> Buy Now
+              </button>
+            </div>
           </div>
         </>
       )}
