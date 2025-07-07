@@ -46,7 +46,7 @@ const Signin = () => {
       console.log('Submitting form data:', formData);
       
       // Using axios instead of fetch
-      const response = await axios.post('http://localhost:8080/api/users/register', {
+      const response = await axios.post(`${API_URL}/api/users/register`, {
         name: formData.name, 
         phoneNumber: formData.phoneNumber,
         email: formData.email,

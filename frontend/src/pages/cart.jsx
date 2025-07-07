@@ -19,7 +19,7 @@ const Cart = () => {
           return;
         }
 
-        const response = await axios.get('http://localhost:8080/api/products/cart', {
+        const response = await axios.get(`${API_URL}/api/products/cart`, {
           headers: { Authorization: `Bearer ${token}` }
         });
 
@@ -30,7 +30,7 @@ const Cart = () => {
           const cartWithProductDetails = await Promise.all(
             cartData.map(async (item) => {
               try {
-                const productRes = await axios.get(`http://localhost:8080/api/products/${item.productId}`);
+                const productRes = await axios.get(`${API_URL}/api/products/${item.productId}`);
                 if (productRes.data.success) {
                   return {
                     ...item,
@@ -69,7 +69,7 @@ const Cart = () => {
         setLoading(false);
         return;
       }
-      const response = await axios.post('http://localhost:8080/api/products/removefromcart', { productId }, {
+      const response = await axios.post(`${API_URL}/api/products/removefromcart`, { productId }, {
         headers: { Authorization: `Bearer ${token}` }
       });
       if (response.data.success) {
@@ -100,7 +100,7 @@ const Cart = () => {
         setLoading(false);
         return;
       }
-      const response = await axios.post('http://localhost:8080/api/orders/buynow', { productIds }, {
+      const response = await axios.post(`${API_URL}/api/orders/buynow`, { productIds }, {
         headers: { Authorization: `Bearer ${token}` }
       });
       if (response.data.success) {

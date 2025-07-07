@@ -11,7 +11,7 @@ import MyProduct from './pages/myrpoduct.jsx'
 import Cart from './pages/cart.jsx'
 import Orders from './pages/orders.jsx'
 import Delivery from './pages/delivery.jsx'
-
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080';
 const App = () => {
   return (
     <div>

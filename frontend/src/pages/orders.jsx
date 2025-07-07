@@ -18,7 +18,7 @@ const Orders = () => {
           setLoading(false);
           return;
         }
-        const response = await axios.get('http://localhost:8080/api/orders/myorders', {
+        const response = await axios.get(`${API_URL}/api/orders/myorders`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         if (response.data.success) {

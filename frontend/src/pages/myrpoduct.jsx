@@ -17,13 +17,13 @@ const MyProduct = () => {
         const token = localStorage.getItem('token');
         if (!token) return setError('Not logged in');
         // Get user id from profile endpoint
-        const userRes = await axios.get('http://localhost:8080/api/users/profile', {
+        const userRes = await axios.get(`${API_URL}/api/users/profile`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         const userId = userRes.data.user?._id;
         if (!userId) return setError('Could not determine user.');
         // Fetch products for this user
-        const res = await axios.get(`http://localhost:8080/api/products/myproduct?userId=${userId}`, {
+        const res = await axios.get(`${API_URL}/api/products/myproduct?userId=${userId}`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         if (res.data.success) {
@@ -62,7 +62,7 @@ const MyProduct = () => {
     try {
       const token = localStorage.getItem('token');
       if (!token) return setError('Not logged in');
-      const res = await axios.put(`http://localhost:8080/api/products/${editingProduct}`, editForm, {
+      const res = await axios.put(`${API_URL}/api/products/${editingProduct}`, editForm, {
         headers: { Authorization: `Bearer ${token}` }
       });
       if (res.data.success) {
@@ -85,7 +85,7 @@ const MyProduct = () => {
       setError('');
       const token = localStorage.getItem('token');
       if (!token) return setError('Not logged in');
-      const res = await axios.delete(`http://localhost:8080/api/products/${productId}`, {
+      const res = await axios.delete(`${API_URL}/api/products/${productId}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       if (res.data.success) {

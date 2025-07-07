@@ -31,7 +31,7 @@ const Profile = () => {
         return;
       }
 
-      const response = await axios.get('http://localhost:8080/api/users/profile', {
+      const response = await axios.get(`${API_URL}/api/users/profile`, {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -93,7 +93,7 @@ const Profile = () => {
       }
 
       // Call the updateUserDetails function in the backend
-      const response = await axios.put('http://localhost:8080/api/users/profile', userData, {
+      const response = await axios.put(`${API_URL}/api/users/profile`, userData, {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -139,7 +139,7 @@ const Profile = () => {
         navigate('/login');
         return;
       }
-      const response = await axios.post('http://localhost:8080/api/users/profile/changepass', {
+      const response = await axios.post(`${API_URL}/api/users/profile/changepass`, {
         oldPassword: passwords.oldPassword,
         newPassword: passwords.newPassword
       }, {
@@ -170,7 +170,7 @@ const Profile = () => {
         return;
       }
       
-      const response = await axios.delete('http://localhost:8080/api/users/profile/delete', {
+      const response = await axios.delete(`${API_URL}/api/users/profile/delete`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       
