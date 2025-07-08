@@ -21,7 +21,7 @@ const Delivery = () => {
           setLoading(false);
           return;
         }
-        const response = await axios.get(`${API_URL}/api/orders/mydelivery`, {
+        const response = await axios.get('http://localhost:8080/api/orders/mydelivery', {
           headers: { Authorization: `Bearer ${token}` }
         });
         if (response.data.success) {
@@ -49,7 +49,7 @@ const Delivery = () => {
         setLoading(false);
         return;
       }
-      const response = await axios.post(`${API_URL}/api/orders/generateotp`, { orderId }, {
+      const response = await axios.post('http://localhost:8080/api/orders/generateotp', { orderId }, {
         headers: { Authorization: `Bearer ${token}` }
       });
       if (response.data.success) {
@@ -86,7 +86,7 @@ const Delivery = () => {
         setLoading(false);
         return;
       }
-      const response = await axios.post(`${API_URL}/api/orders/verifyotp`, { orderId, otp }, {
+      const response = await axios.post('http://localhost:8080/api/orders/verifyotp', { orderId, otp }, {
         headers: { Authorization: `Bearer ${token}` }
       });
       if (response.data.success) {

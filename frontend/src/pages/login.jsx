@@ -28,7 +28,7 @@ const Login = () => {
       console.log('Logging in with:', formData)
       
       // API call using axios
-      const response = await axios.post(`${API_URL}/api/users/login`, formData);
+      const response = await axios.post('http://localhost:8080/api/users/login', formData);
       
       // Handle successful login
       console.log('Login successful:', response.data);

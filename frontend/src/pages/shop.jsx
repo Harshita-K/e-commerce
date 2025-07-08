@@ -19,7 +19,7 @@ const Shop = () => {
       try {
         const token = localStorage.getItem('token');
         const headers = token ? { Authorization: `Bearer ${token}` } : {};
-        const response = await axios.get(`${API_URL}/api/products/shop`, { headers });
+        const response = await axios.get('http://localhost:8080/api/products/shop', { headers });
         if (response.data.success) {
           setProducts(response.data.products);
         } else {
@@ -27,13 +27,13 @@ const Shop = () => {
         }
         // Fetch cart products if logged in
         if (token) {
-          const cartRes = await axios.get(`${API_URL}/api/products/cart`, { headers });
+          const cartRes = await axios.get('http://localhost:8080/api/products/cart', { headers });
           if (cartRes.data.success) {
             setCartProductIds((cartRes.data.cartdata || []).map(item => item.productId));
           }
           
           // Fetch user's orders to check which products are already ordered
-          const ordersRes = await axios.get(`${API_URL}/api/orders/myorders`, { headers });
+          const ordersRes = await axios.get('http://localhost:8080/api/orders/myorders', { headers });
           if (ordersRes.data.success) {
             const orderedIds = ordersRes.data.orders.map(order => order.product?._id || order.product);
             setOrderedProductIds(orderedIds);
@@ -59,7 +59,7 @@ const Shop = () => {
         return;
       }
 
-      const response = await axios.post(`${API_URL}/api/products/addtocart`, 
+      const response = await axios.post('http://localhost:8080/api/products/addtocart', 
         { productId, quantity: 1 },
         { headers: { Authorization: `Bearer ${token}` } }
       );

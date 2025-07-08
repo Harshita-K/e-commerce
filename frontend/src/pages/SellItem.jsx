@@ -36,7 +36,7 @@ const SellItem = () => {
       }
       // Decode user id from token (or get from backend/profile if you have user context)
       // For simplicity, let's fetch user id from profile endpoint
-      const userRes = await axios.get(`${API_URL}/api/users/profile`, {
+      const userRes = await axios.get('http://localhost:8080/api/users/profile', {
         headers: { Authorization: `Bearer ${token}` }
       });
       const owner = userRes.data.user?._id;
@@ -50,7 +50,7 @@ const SellItem = () => {
         owner,
         category: form.category ? form.category.split(',') : []
     };
-      const res = await axios.post(`${API_URL}/api/products/sell`, payload, {
+      const res = await axios.post('http://localhost:8080/api/products/sell', payload, {
         headers: { Authorization: `Bearer ${token}` }
       });
       if (res.data.success) {
